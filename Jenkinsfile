@@ -1,6 +1,10 @@
 pipeline {
     agent any
-   
+    
+    triggers {
+        pollSCM('* * * * *') 
+    }
+    
     stages {
         
         stage('Restore Dependencies') {
@@ -19,15 +23,6 @@ pipeline {
             steps {
                 bat 'dotnet test --no-build --verbosity normal'
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: '**/bin/**', fingerprint: true
-        }
-        failure {
-            echo 'Build or tests failed. Check logs for details.'
         }
     }
 }
